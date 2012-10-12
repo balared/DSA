@@ -3,7 +3,7 @@ import java.util.Random;
 
 /**
  * 
- * @author Thomas Pearce
+ * @author Balared
  * @version 0.1.0.0
  *
  * An implementation of the Diamond Square Algorithm, as 
