@@ -156,6 +156,7 @@ abstract class DiamondSquareAlgorithm {
 		
 		ret /= valids;
 		
+		//This is the line that doesn't work
 		ret += (r.nextFloat() - 0.5f) / Math.pow(2, randDeprMag);
 		
 		return ret;
