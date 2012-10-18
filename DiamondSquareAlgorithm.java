@@ -33,10 +33,10 @@ abstract class DiamondSquareAlgorithm {
 		map[width - 1][width - 1] = r.nextFloat();
 
 		// Perform the DSA on it
-		map = performDSA(map, size);
+		performDSA(map, size);
 
 		// Normalize map between 0 and 1
-	    map = normalize(map);
+	    normalize(map);
 
 		// Return the completed map
 		return map;
@@ -51,20 +51,12 @@ abstract class DiamondSquareAlgorithm {
 	 *            calculated.
 	 * @return A completed fractal terrain heightmap
 	 */
-	private static float[][] performDSA(float[][] preDSAmap, int size) {
-		// Copy the pre-DSA map
-		float[][] postDSAMap = preDSAmap.clone();
-		for (int i = 0; i < Math.pow(2, size) + 1; i++)
-			postDSAMap[i] = preDSAmap[i].clone();
-
+	private static void performDSA(float[][] map, int size) {
 		// perform the algorithm
 		for (int i = 0; i < size; i++) {
-			postDSAMap = square(postDSAMap, size, i);
-			postDSAMap = diamond(postDSAMap, size, i);
+			square(map, size, i);
+			diamond(map, size, i);
 		}
-
-		// Return the completed map
-		return postDSAMap;
 	}
 
 	/**
@@ -78,11 +70,7 @@ abstract class DiamondSquareAlgorithm {
 	 *            The number of times the Diamond method has been called so far
 	 * @return A post-diamond version of the map
 	 **/
-	private static float[][] diamond(float[][] oldMap, int size, int depth) {
-		// Copy the pre-diamond map
-		float[][] newMap = oldMap.clone();
-		for (int i = 0; i < Math.pow(2, size) + 1; i++)
-			newMap[i] = oldMap[i].clone();
+	private static void diamond(float[][] Map, int size, int depth) {
 
 		// Calculate the offset applied to find the first set of coordinates in
 		// odd-numbered rows
@@ -94,21 +82,18 @@ abstract class DiamondSquareAlgorithm {
 		for (int y = 0; y < width; y += offset)
 			for (int x = (y % offset == 0 ? 0 : (int) offset); x < width; x += offset) {
 				// ...If the coordinate is unassigned...
-				if (newMap[x][y] == 0)
+				if (Map[x][y] == 0)
 					// ...Assign it a value based on the average of the values
 					// around it.
-					newMap[x][y] = averageWithRand(x >= offset ? newMap[x
+					Map[x][y] = averageWithRand(x >= offset ? Map[x
 							- offset][y] : Float.MAX_VALUE,
-							x < width - offset ? newMap[x + offset][y]
+							x < width - offset ? Map[x + offset][y]
 									: Float.MAX_VALUE,
-							y >= offset ? newMap[x][y - offset]
+							y >= offset ? Map[x][y - offset]
 									: Float.MAX_VALUE,
-							y < width - offset ? newMap[x][y + offset]
+							y < width - offset ? Map[x][y + offset]
 									: Float.MAX_VALUE, depth + 1);
 			}
-
-		// Return the map post-Diamond
-		return newMap;
 	}
 
 	/**
@@ -122,12 +107,7 @@ abstract class DiamondSquareAlgorithm {
 	 *            The number of times the Square method has been called so far
 	 * @return A post-square version of the map
 	 **/
-	private static float[][] square(float[][] oldMap, int size, int depth) {
-		// Copy the pre-square map
-		float[][] newMap = oldMap.clone();
-		for (int i = 0; i < Math.pow(2, size) + 1; i++)
-			newMap[i] = oldMap[i].clone();
-
+	private static void square(float[][] Map, int size, int depth) {
 		// Calculate the offset applied to find the first set of coordinates in
 		// odd-numbered rows
 		int offset = (int) Math.pow(2, size - depth - 1);
@@ -138,23 +118,20 @@ abstract class DiamondSquareAlgorithm {
 		for (int y = offset; y < width; y += offset * 2)
 			for (int x = offset; x < width; x += offset * 2) {
 				// ...If the coordinate is unassigned...
-				if (newMap[x][y] == 0)
+				if (Map[x][y] == 0)
 					// ...Assign it a value based on the average of the values
 					// around it.
-					newMap[x][y] = averageWithRand(
-							(x >= offset && y >= offset) ? newMap[x - offset][y
+					Map[x][y] = averageWithRand(
+							(x >= offset && y >= offset) ? Map[x - offset][y
 									- offset] : Float.MAX_VALUE,
-							(x <= width - offset && y >= offset) ? newMap[x
+							(x <= width - offset && y >= offset) ? Map[x
 									+ offset][y - offset] : Float.MAX_VALUE,
-							(x >= offset && y <= width - offset) ? newMap[x
+							(x >= offset && y <= width - offset) ? Map[x
 									- offset][y + offset] : Float.MAX_VALUE,
-							(x <= width - offset && y <= width - offset) ? newMap[x
+							(x <= width - offset && y <= width - offset) ? Map[x
 									+ offset][y + offset]
 									: Float.MAX_VALUE, depth);
 			}
-
-		// Return the map post-Square
-		return newMap;
 	}
 
 	/**
@@ -222,24 +199,19 @@ abstract class DiamondSquareAlgorithm {
 	 *            The pre-normalization map
 	 * @return The normalised map.
 	 */
-	private static float[][] normalize(float[][] rawMap) {
-		// Make a copy of the prenormal map
-		float[][] normalMap = rawMap.clone();
-		for (int i = 0; i < rawMap.length; i++)
-			normalMap[i] = rawMap[i].clone();
-
+	private static void normalize(float[][] Map) {
 		// Default the highest and lowest value. Make a diff
 		float highest = Float.MIN_VALUE;
 		float lowest = Float.MAX_VALUE;
 		float diff;
 
 		// Find the highest and lowest values
-		for (int i = 0; i < rawMap.length; i++)
-			for (int j = 0; j < rawMap[0].length; j++) {
-				if (highest < rawMap[i][j])
-					highest = rawMap[i][j];
-				if (lowest > rawMap[i][j])
-					lowest = rawMap[i][j];
+		for (int i = 0; i < Map.length; i++)
+			for (int j = 0; j < Map[0].length; j++) {
+				if (highest < Map[i][j])
+					highest = Map[i][j];
+				if (lowest > Map[i][j])
+					lowest = Map[i][j];
 			}
 
 		// Calculate the difference between highest and lowest
@@ -248,13 +220,10 @@ abstract class DiamondSquareAlgorithm {
 		// Subtract the lowest value from each value (defaulting range to 0.0F+)
 		// Divide each range by the difference between the two (defaulting range
 		// to 0.0F -> 1.0F)
-		for (int i = 0; i < rawMap.length; i++)
-			for (int j = 0; j < rawMap[0].length; j++) {
-				normalMap[i][j] -= lowest;
-				normalMap[i][j] /= diff;
+		for (int i = 0; i < Map.length; i++)
+			for (int j = 0; j < Map[0].length; j++) {
+				Map[i][j] -= lowest;
+				Map[i][j] /= diff;
 			}
-
-		// Return the normalised map
-		return normalMap;
 	}
 }
