@@ -36,7 +36,7 @@ abstract class DiamondSquareAlgorithm {
 		performDSA(map, size);
 
 		// Normalize map between 0 and 1
-	    normalize(map);
+		normalize(map);
 
 		// Return the completed map
 		return map;
@@ -199,19 +199,19 @@ abstract class DiamondSquareAlgorithm {
 	 *            The pre-normalization map
 	 * @return The normalised map.
 	 */
-	private static void normalize(float[][] Map) {
+	private static void normalize(float[][] map) {
 		// Default the highest and lowest value. Make a diff
 		float highest = Float.MIN_VALUE;
 		float lowest = Float.MAX_VALUE;
 		float diff;
 
 		// Find the highest and lowest values
-		for (int i = 0; i < Map.length; i++)
-			for (int j = 0; j < Map[0].length; j++) {
-				if (highest < Map[i][j])
-					highest = Map[i][j];
-				if (lowest > Map[i][j])
-					lowest = Map[i][j];
+		for (int i = 0; i < map.length; i++)
+			for (int j = 0; j < map[0].length; j++) {
+				if (highest < map[i][j])
+					highest = map[i][j];
+				if (lowest > map[i][j])
+					lowest = map[i][j];
 			}
 
 		// Calculate the difference between highest and lowest
@@ -220,10 +220,10 @@ abstract class DiamondSquareAlgorithm {
 		// Subtract the lowest value from each value (defaulting range to 0.0F+)
 		// Divide each range by the difference between the two (defaulting range
 		// to 0.0F -> 1.0F)
-		for (int i = 0; i < Map.length; i++)
-			for (int j = 0; j < Map[0].length; j++) {
-				Map[i][j] -= lowest;
-				Map[i][j] /= diff;
+		for (int i = 0; i < map.length; i++)
+			for (int j = 0; j < map[0].length; j++) {
+				map[i][j] -= lowest;
+				map[i][j] /= diff;
 			}
 	}
 }
