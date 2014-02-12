@@ -85,14 +85,13 @@ abstract class DiamondSquareAlgorithm {
 				if (Map[x][y] == 0)
 					// ...Assign it a value based on the average of the values
 					// around it.
-					Map[x][y] = averageWithRand(x >= offset ? Map[x
-							- offset][y] : Float.MAX_VALUE,
-							x < width - offset ? Map[x + offset][y]
-									: Float.MAX_VALUE,
-							y >= offset ? Map[x][y - offset]
-									: Float.MAX_VALUE,
-							y < width - offset ? Map[x][y + offset]
-									: Float.MAX_VALUE, depth + 1);
+					Map[x][y] = averageWithRand(
+							float[]{
+								x >= offset ? Map[x - offset][y] : Float.MAX_VALUE,
+								x < width - offset ? Map[x + offset][y] : Float.MAX_VALUE,
+								y >= offset ? Map[x][y - offset] : Float.MAX_VALUE,
+								y < width - offset ? Map[x][y + offset] : Float.MAX_VALUE}, 
+							depth + 1);
 			}
 	}
 
@@ -122,27 +121,18 @@ abstract class DiamondSquareAlgorithm {
 					// ...Assign it a value based on the average of the values
 					// around it.
 					Map[x][y] = averageWithRand(
-							(x >= offset && y >= offset) ? Map[x - offset][y
-									- offset] : Float.MAX_VALUE,
-							(x <= width - offset && y >= offset) ? Map[x
-									+ offset][y - offset] : Float.MAX_VALUE,
-							(x >= offset && y <= width - offset) ? Map[x
-									- offset][y + offset] : Float.MAX_VALUE,
-							(x <= width - offset && y <= width - offset) ? Map[x
-									+ offset][y + offset]
-									: Float.MAX_VALUE, depth);
+							float[]{
+								(x >= offset && y >= offset) ? Map[x - offset][y - offset] : Float.MAX_VALUE,
+								(x <= width - offset && y >= offset) ? Map[x + offset][y - offset] : Float.MAX_VALUE,
+								(x >= offset && y <= width - offset) ? Map[x - offset][y + offset] : Float.MAX_VALUE,
+								(x <= width - offset && y <= width - offset) ? Map[x + offset][y + offset] : Float.MAX_VALUE},
+							depth);
 			}
 	}
 
 	/**
-	 * @param a
-	 *            The first value contributing to the average
-	 * @param bT
-	 *            he second value contributing to the average
-	 * @param c
-	 *            The third value contributing to the average
-	 * @param d
-	 *            The fourth value contributing to the average
+	 * @param points
+	 *            The array of points contributing to the average
 	 * @param randDeprMag
 	 *            The current depth of the algorithm, which acts as a
 	 *            Depriciation Magnitude for the random element of the averaging
@@ -150,33 +140,22 @@ abstract class DiamondSquareAlgorithm {
 	 *         element of appropriate size according to the depth of the
 	 *         algorithm
 	 */
-	private static float averageWithRand(float a, float b, float c, float d,
-			int randDeprMag) {
+	private static float averageWithRand(float[] points, int randDeprMag) {
 		// Create a value in which to store the number of valid numbers, and the
 		// ret(urn) value. Set both to 0
 		int valids = 0;
 		float ret = 0;
 
-		// If a/b/c/d is not equal to the (incredibly unlikely) default
-		// incorrect value...
-		if (a != Float.MAX_VALUE) {
-			// Increment the number of valid entries
-			valids++;
-			// Add it to the return value
-			ret += a;
-		}
-		if (b != Float.MAX_VALUE) {
-			valids++;
-			ret += b;
-		}
-		if (c != Float.MAX_VALUE) {
-			valids++;
-			ret += c;
-		}
-		if (d != Float.MAX_VALUE) {
-			valids++;
-			ret += d;
-		}
+		// For each of the contributing points...
+		for(float point : points)
+			// If a/b/c/d is not equal to the (incredibly unlikely) default
+			// incorrect value...
+			if (point != Float.MAX_VALUE) {
+				// Increment the number of valid entries
+				valids++;
+				// Add it to the return value
+				ret += point;
+			}
 
 		// Divide the return value (currently the sum of the valid entries) by
 		// the number of valid entries
